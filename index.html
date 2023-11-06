@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/initCss/css.css">
+  <link rel="shortcut icon" href="/img/logo.jpg" type="image/x-icon">
+  <title>Midnight Haunt</title>
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="content">
+      <h2>Titulo</h2>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum neque quaerat beatae necessitatibus nulla impedit
+        quia tempora quos repellendus repellat, a blanditiis consectetur quidem voluptates optio debitis magnam culpa
+        iusto?
+      </p>
+    </div>
+    <div class="togglebtn"></div>
+  </div>
+
+
+  <div class="image">
+    <div class="img">
+      <img src="/img/bruxa.png">
+    </div>
+  </div>
+
+  <script src="/js/initJs/js.js"></script>
+  
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "../build/three.module.js",
+        "jsm/OrbitControls": "../build/jsm/OrbitControls.js"
+      }
+    }
+  </script>
+  <script type="module">
+    import * as THREE from './build/three.module.js';
+    import { OrbitControls } from './jsm/OrbitControls.js';
+    import { GLTFLoader } from './jsm/GLTFLoader.js';
+
+    var camera, scene, renderer, mesh, controls;
+
+    init();
+    render();
+
+    function init() {
+      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 300);
+
+      // configurações da cena
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x1f2124);
+      scene.position.y = -1.6;
+      scene.position.x = -6;
+      scene.position.Z = 4;
+      console.log(scene);
+
+      // Adicionar a Renderização
+      renderer = new THREE.WebGLRenderer();
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      //Controles da cena
+      controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.enablePan = false;
+      controls.enableZoom = false;
+      console.log(controls);
+
+      // Adicionar luzes na cena
+      const light = new THREE.AmbientLight(0xffffff);
+      scene.add(light);
+
+
+      // Adicionar os modelos 3D
+      const loader = new GLTFLoader().setPath('./models/');
+      loader.load('halloween.glb', function (glb) {
+        var box = new THREE.Box3().setFromObject(glb.scene);
+        var obj_size = box.getSize(new THREE.Vector3(0, 0, 0));
+
+        glb.scene.scale.set(8, 8, 8);
+        camera.position.z = obj_size.length() - 30;
+        box.getCenter(controls.target);
+
+        console.log(obj_size);
+
+        scene.add(glb.scene);
+
+        loader.load('mansao.glb', function (outro_glb) {
+          var outro_box = new THREE.Box3().setFromObject(outro_glb.scene);
+          var outro_obj_size = outro_box.getSize(new THREE.Vector3(0, 0, 0));
+
+          outro_glb.scene.scale.set(3, 3, 3);
+          outro_glb.scene.position.set(30, -2, 100); // Defina a posição do novo modelo
+
+          // Cria uma luz direcional
+          const light = new THREE.DirectionalLight(0xffffff, 4);
+          light.position.set(0, 1, 0); // Define a posição da luz
+          light.target = outro_glb.scene; // Define o modelo ao qual a luz é direcionada
+
+          scene.add(light);
+
+          // Cria uma matriz de rotação para girar o modelo
+          const rotationMatrix = new THREE.Matrix4();
+          rotationMatrix.makeRotationY(Math.PI); // Gira 180 graus
+
+          // Defina a rotação do objeto do modelo
+          outro_glb.scene.rotation.setFromRotationMatrix(rotationMatrix);
+
+          box.getCenter(controls.target);
+
+          scene.add(outro_glb.scene);
+        });
+      });
+
+      // Adicionar o chão com uma textura
+      const textureLoader = new THREE.TextureLoader();
+      const texture = textureLoader.load('./img/escura.jpg');
+
+      const groundMaterial = new THREE.MeshBasicMaterial({ map: texture });
+      const groundGeometry = new THREE.PlaneGeometry(100, 100);
+
+      // Ajusta a escala da textura para cobrir todo o chão
+      texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+      texture.repeat.set(20, 20); // Ajusta o valor para controlar a repetição da textura
+
+      const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+      ground.rotation.x = -Math.PI / 2; // Para orientar o chão na horizontal
+      scene.add(ground);
+    }
+
+    window.onresize = function () {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function render() {
+      requestAnimationFrame(render);
+      if (controls)
+        controls.update();
+      renderer.render(scene, camera);
+    }
+  </script>
+
+</body>
+
+</html>

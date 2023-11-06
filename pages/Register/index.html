@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/registerCss/css.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <title>Cadastro</title>
+</head>
+
+<body>
+  <div class="arrow-container">
+    <div class="circle">
+      <i class="fas fa-arrow-up arrow"></i>
+    </div>
+  </div>
+
+
+  <div class="flip-card" id="zoom-card">
+    <div class="card">
+      <div class="card-inner">
+        <div class="card-front">
+          <h3>Casa Nightgale</h3>
+          <p>A Casa Nightgale era conhecida por ser assombrada, e as histórias sobre aparições de espíritos e eventos
+            paranormais se espalharam pela comunidade. No entanto, ninguém ousou se aproximar dela, até agora.</p>
+        </div>
+        <div class="card-back">
+          <h2>Cadastre-se</h2>
+          <div class="input-container">
+            <input type="text" placeholder="Nome de Usuário" required>
+            <input type="email" placeholder="Digite seu Email" required>
+            <input type="password" placeholder="Digite uma senha" required>
+          </div>
+          <a href="/pages/Login/index.html"><button id="cadastrar-button">Cadastrar</button></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script type="importmap">
+        {
+          "imports": {
+            "three": "../../build/three.module.js",
+            "jsm/OrbitControls": "../../build/jsm/OrbitControls.js"
+          }
+        }
+      </script>
+  <script type="module">
+    import * as THREE from '../../build/three.module.js';
+    import { OrbitControls } from '../../jsm/OrbitControls.js';
+    import { GLTFLoader } from '../../jsm/GLTFLoader.js';
+
+    var camera, scene, renderer, mesh, controls;
+
+    init();
+    render();
+
+    function init() {
+      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 3000);
+
+      scene = new THREE.Scene();
+      scene.position.y = -40;
+      scene.background = new THREE.Color(0x111111);
+      console.log(scene);
+
+      renderer = new THREE.WebGLRenderer();
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      // Controles da cena
+      controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.enablePan = false;
+      controls.enableZoom = false;
+      console.log(controls);
+
+      // Adicionar as luzes na cena
+      const light = new THREE.AmbientLight(0xffffff);
+      scene.add(light);
+
+      const loader = new GLTFLoader().setPath('../../models/');
+      loader.load('the_house.glb', function (glb) {
+        var box = new THREE.Box3().setFromObject(glb.scene);
+        var obj_size = box.getSize(new THREE.Vector3(0, 0, 0));
+
+        glb.scene.scale.set(8.6, 8.6, 8.6);
+        camera.position.z = obj_size.length() - 30;
+        box.getCenter(controls.target);
+
+        scene.add(glb.scene);
+        
+      });
+
+      // Evento de clique na seta para aproximar a câmera e mostrar o card
+      var arrow = document.querySelector(".arrow-container");
+      arrow.addEventListener("click", function () {
+        camera.position.z -= 600;
+        checkZoom();
+      });
+    }
+
+    window.onresize = function () {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function checkZoom() {
+      if (camera.position.z <= 1000) { // Define o limite de zoom
+        // Exibe o card
+        const zoomCard = document.getElementById("zoom-card");
+        zoomCard.classList.add("visible");
+      }
+    }
+
+    function render() {
+      requestAnimationFrame(render);
+      if (controls)
+        controls.update();
+      renderer.render(scene, camera);
+    }
+  </script>
+</body>
+
+</html>
