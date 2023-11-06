@@ -72,6 +72,8 @@
       controls.dampingFactor = 0.05;
       controls.enablePan = false;
       controls.enableZoom = false;
+      controls.autoRotate = true;
+      constrols.autoRotateSpeed = 2;
       console.log(controls);
 
       // Adicionar luzes na cena
@@ -93,31 +95,6 @@
 
         scene.add(glb.scene);
 
-        loader.load('mansao.glb', function (outro_glb) {
-          var outro_box = new THREE.Box3().setFromObject(outro_glb.scene);
-          var outro_obj_size = outro_box.getSize(new THREE.Vector3(0, 0, 0));
-
-          outro_glb.scene.scale.set(3, 3, 3);
-          outro_glb.scene.position.set(30, -2, 100); // Defina a posição do novo modelo
-
-          // Cria uma luz direcional
-          const light = new THREE.DirectionalLight(0xffffff, 4);
-          light.position.set(0, 1, 0); // Define a posição da luz
-          light.target = outro_glb.scene; // Define o modelo ao qual a luz é direcionada
-
-          scene.add(light);
-
-          // Cria uma matriz de rotação para girar o modelo
-          const rotationMatrix = new THREE.Matrix4();
-          rotationMatrix.makeRotationY(Math.PI); // Gira 180 graus
-
-          // Defina a rotação do objeto do modelo
-          outro_glb.scene.rotation.setFromRotationMatrix(rotationMatrix);
-
-          box.getCenter(controls.target);
-
-          scene.add(outro_glb.scene);
-        });
       });
 
       // Adicionar o chão com uma textura
