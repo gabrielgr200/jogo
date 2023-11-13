@@ -18,13 +18,14 @@
         quia tempora quos repellendus repellat, a blanditiis consectetur quidem voluptates optio debitis magnam culpa
         iusto?
       </p>
+      <a href="/pages/Register/index.html" class="button">Inciar</a>
     </div>
     <div class="togglebtn"></div>
   </div>
 
 
   <script src="/js/initJs/js.js"></script>
-  
+
   <script type="importmap">
     {
       "imports": {
@@ -90,21 +91,6 @@
         scene.add(glb.scene);
 
       });
-
-      // Adicionar o chão com uma textura
-      const textureLoader = new THREE.TextureLoader();
-      const texture = textureLoader.load('./img/escura.jpg');
-
-      const groundMaterial = new THREE.MeshBasicMaterial({ map: texture });
-      const groundGeometry = new THREE.PlaneGeometry(100, 100);
-
-      // Ajusta a escala da textura para cobrir todo o chão
-      texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-      texture.repeat.set(20, 20); // Ajusta o valor para controlar a repetição da textura
-
-      const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-      ground.rotation.x = -Math.PI / 2; // Para orientar o chão na horizontal
-      scene.add(ground);
     }
 
     window.onresize = function () {

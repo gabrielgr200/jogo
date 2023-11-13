@@ -16,28 +16,30 @@
     </div>
   </div>
 
-
-  <div class="flip-card" id="zoom-card">
-    <div class="card">
-      <div class="card-inner">
-        <div class="card-front">
-          <h3>Casa Nightgale</h3>
-          <p>A Casa Nightgale era conhecida por ser assombrada, e as histórias sobre aparições de espíritos e eventos
-            paranormais se espalharam pela comunidade. No entanto, ninguém ousou se aproximar dela, até agora.</p>
-        </div>
-        <div class="card-back">
-          <h2>Cadastre-se</h2>
-          <div class="input-container">
-            <input type="text" placeholder="Nome de Usuário" required>
-            <input type="email" placeholder="Digite seu Email" required>
-            <input type="password" placeholder="Digite uma senha" required>
+      <div class="flip-card" id="zoom-card">
+        <div class="card">
+          <div class="card-inner">
+            <div class="card-front">
+              <h3>Casa Nightgale</h3>
+              <p>A Casa Nightgale era conhecida por ser assombrada, e as histórias sobre aparições de espíritos e
+                eventos
+                paranormais se espalharam pela comunidade. No entanto, ninguém ousou se aproximar dela, até agora.</p>
+            </div>
+            <div class="card-back">
+              <h2>Cadastre-se</h2>
+              <div class="input-container">
+                <input type="text" placeholder="Nome de Usuário" required>
+                <input type="text" placeholder="Nickname" required>
+                <input type="email" placeholder="Digite seu Email" required>
+                <input type="password" placeholder="Digite uma senha" required>
+              </div>
+              <button id="cadastrar-button">Cadastrar</button>
+            </div>
           </div>
-          <a href="/pages/Login/index.html"><button id="cadastrar-button">Cadastrar</button></a>
         </div>
       </div>
-    </div>
-  </div>
 
+  <script src="/js/initJs/js.js"></script>
 
   <script type="importmap">
         {
@@ -92,7 +94,7 @@
         box.getCenter(controls.target);
 
         scene.add(glb.scene);
-        
+
       });
 
       // Evento de clique na seta para aproximar a câmera e mostrar o card

@@ -130,3 +130,16 @@ body {
 .img img {
     width: 100%;
 }
+
+.button {
+    text-transform: uppercase;
+    border-radius: 30px;
+    padding: 10px 10px 10px 10px;
+    background: #cd6a2e;
+    color: #fff;
+    text-decoration: none;
+}
+
+.button:hover {
+    background: #b87333;
+}
